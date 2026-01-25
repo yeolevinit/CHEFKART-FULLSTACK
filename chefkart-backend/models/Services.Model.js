@@ -1,17 +1,57 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const ServiceSchema = new mongoose.Schema({
-    
-    servicename: { type: String, required: true },
-    image: { type: String },
-    description: { type: String, required: true },
-    updatedAt: { type: Date, default: Date.now }
-});
+const serviceSchema = new mongoose.Schema(
+    {
+        servicename: {
+            type: String,
+            required: [true, 'Service name is required'],
+            trim: true,
+            unique: true // Prevent duplicate service names
+        },
+        slug: {
+            type: String,
+            lowercase: true,
+            trim: true
+        },
+        description: {
+            type: String,
+            required: [true, 'Service description is required'],
+            trim: true
+        },
+        image: {
+            type: String,
+            required: [true, 'Service image URL is required']
+        },
+        imagePublicId: {
+            type: String,
+            required: [true, 'Cloudinary Public ID is required for storage management']
+        },
+        isActive: {
+            type: Boolean,
+            default: true
+        },
+        priceRange: {
+            type: String, // e.g., "Starting at ₹2000"
+            trim: true
+        }
+    },
+    {
+        // Native Mongoose timestamps: Automatically manages 'createdAt' and 'updatedAt'
+        timestamps: true
+    }
+);
 
-// Middleware to update the updatedAt field before saving
-ServiceSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
+// Middleware to automatically generate a slug from the service name before saving
+serviceSchema.pre('save', function (next) {
+    if (this.isModified('servicename')) {
+        this.slug = this.servicename
+            .toLowerCase()
+            .split(' ')
+            .join('-');
+    }
     next();
 });
 
-module.exports = mongoose.model('Service', ServiceSchema);
+const Service = mongoose.model('Service', serviceSchema);
+
+export default Service;
