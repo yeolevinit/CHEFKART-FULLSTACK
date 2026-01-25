@@ -35,3 +35,4 @@ chefkart-backend/.DS_Store
 chefkart-frontend/.DS_Store
 chefkart-backend/Thumbs.db
 chefkart-frontend/Thumbs.db
+node_modules
