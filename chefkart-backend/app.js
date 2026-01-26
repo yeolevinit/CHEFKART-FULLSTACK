@@ -10,139 +10,125 @@ import xss from 'xss-clean';
 
 // Config
 dotenv.config();
-import connectDB from './config/db.js'; // Ensure your files have .js extension in imports
+import connectDB from './config/db.js';
 
-// Route Imports (Standardized naming)
-import userRoutes from './routes/User.route.js';
-import blogRoutes from './routes/Blog.route.js';
-import testimonialRoutes from './routes/Testimonial.route.js';
-import galleryRoutes from './routes/Gallery.route.js';
-import carouselRoutes from './routes/Crousel.route.js';
+// Route Imports (Standardized to match our refactor)
+import userRoutes from './routes/User.routes.js';
+import blogRoutes from './routes/Blog.routes.js';
+import testimonialRoutes from './routes/Testimonial.routes.js';
+import galleryRoutes from './routes/Gallery.routes.js';
+import carouselRoutes from './routes/Carousel.routes.js';
 import bookingRoutes from './routes/Booking.routes.js';
-import chefRoutes from './routes/Chef.route.js';
-import connectRoutes from './routes/Connect.route.js';
-import serviceRoutes from './routes/Service.route.js';
-import homeRoutes from './routes/HomePage.route.js';
-import investorContactRoutes from './routes/InvestorContact.route.js';
-import investorRoutes from './routes/Investor.route.js';
-import foodRoutes from './routes/Food.route.js';
-import joinRoutes from './routes/Join.route.js';
-import foodGallRoutes from './routes/FoodGall.route.js';
+import chefRoutes from './routes/Chef.routes.js';
+import connectRoutes from './routes/Connect.routes.js';
+import serviceRoutes from './routes/Service.routes.js';
+import homeRoutes from './routes/HomePage.routes.js';
+import investorContactRoutes from './routes/InvestorContact.routes.js';
+import investorRoutes from './routes/Investor.routes.js';
+import foodRoutes from './routes/Food.routes.js';
+import joinRoutes from './routes/Join.routes.js';
+import foodGalleryRoutes from './routes/FoodGallery.routes.js';
+import contactRoutes from './routes/Contact.routes.js';
 
 // Initialize App
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ====================================================
-// 🛡️ Security & Middleware ( The "Senior Dev" Touch )
+// 🛡️ Security & Middleware
 // ====================================================
 
-// 1. Set security HTTP headers (Protects against common attacks)
 app.use(helmet());
 
-// 2. Body Parser (Limit body size to prevent DoS)
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: false }));
+// Increased limit slightly for multipart/form-data metadata (images go to Cloudinary)
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
-// 3. Sanitization (Prevent XSS and Parameter Pollution)
 app.use(xss());
 app.use(hpp());
 
-// 4. Rate Limiting (Prevent Brute Force & Spam)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again after 15 minutes',
+  windowMs: 15 * 60 * 1000,
+  max: 200, // Increased to 200 to accommodate frontend asset loading
+  message: 'Too many requests, please try again later.',
 });
-app.use('/api', limiter); // Apply to API routes
+app.use('/api', limiter);
 
-// 5. CORS (Configure strictly for production)
 const corsOptions = {
-  origin: process.env.CLIENT_URL || '*', // Restrict this in production!
+  origin: process.env.CLIENT_URL || '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 };
 app.use(cors(corsOptions));
 
-// 6. Logging (Dev mode only)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 // ====================================================
-// 🛣️ Routes (Grouped & Versioned)
+// 🛣️ Routes (The MVC Hub)
 // ====================================================
 
 // Health Check
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: 'ChefKart Backend is running smoothly 🐻',
+    message: 'ChefKart API is live 🐻',
     timestamp: new Date()
   });
 });
 
-// API Version 1 Grouping (Best Practice)
 const apiV1 = express.Router();
 
-apiV1.use('/auth', userRoutes);
-apiV1.use('/blog', blogRoutes);
-apiV1.use('/testimonial', testimonialRoutes);
+apiV1.use('/users', userRoutes);         // Standardized from /auth
+apiV1.use('/blogs', blogRoutes);
+apiV1.use('/testimonials', testimonialRoutes);
 apiV1.use('/gallery', galleryRoutes);
 apiV1.use('/carousel', carouselRoutes);
-apiV1.use('/chef', chefRoutes);
-apiV1.use('/investor-contact', investorContactRoutes); // Fixed naming
-apiV1.use('/services', serviceRoutes); // Renamed from 'ser' for clarity
-apiV1.use('/home', homeRoutes);
-apiV1.use('/investor', investorRoutes);
-apiV1.use('/booking', bookingRoutes);
+apiV1.use('/chefs', chefRoutes);
+apiV1.use('/bookings', bookingRoutes);
+apiV1.use('/services', serviceRoutes);
+apiV1.use('/home-page', homeRoutes);
+apiV1.use('/investors', investorRoutes);
+apiV1.use('/investor-contact', investorContactRoutes);
 apiV1.use('/connect', connectRoutes);
-apiV1.use('/food-gallery', foodGallRoutes); // Fixed naming
+apiV1.use('/food-gallery', foodGalleryRoutes);
 apiV1.use('/food', foodRoutes);
 apiV1.use('/join', joinRoutes);
+apiV1.use('/contacts', contactRoutes);  // Added missing Contact route
 
-// Apply prefix
 app.use('/api/v1', apiV1);
 
 // ====================================================
 // ❌ Error Handling
 // ====================================================
 
-// 404 Handler
 app.use((req, res, next) => {
-  next(createError.NotFound('This route does not exist.'));
+  next(createError.NotFound('Route not found'));
 });
 
-// Global Error Handler
 app.use((err, req, res, next) => {
-  // Simple log for dev, structured log for prod
-  if (process.env.NODE_ENV === 'development') console.error(err);
-
-  res.status(err.status || 500).json({
+  const statusCode = err.status || 500;
+  res.status(statusCode).json({
     status: 'error',
-    code: err.status || 500,
     message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined, // Hide stack in prod
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
   });
 });
 
 // ====================================================
-// 🔌 Server Start
+// 🔌 Execution
 // ====================================================
 
 const startServer = async () => {
   try {
-    // Connect to DB first
     await connectDB();
-    console.log('✅ MongoDB Connected Successfully');
-
-    // Then start server
     app.listen(PORT, () => {
-      console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+      console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
-    process.exit(1); // Exit with failure
+    console.error('❌ Startup Error:', error);
+    process.exit(1);
   }
 };
 
