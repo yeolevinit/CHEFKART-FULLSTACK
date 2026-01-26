@@ -33,7 +33,7 @@ const BlogTab = () => {
                 console.error("Axios Error Details:", err.response || err);
                 setError(`Error: ${err.response?.data?.message || "Server connection failed"}`);
             } finally {
-                setLoading(true);
+                setLoading(false);
             }
         };
         fetchBlogs();
