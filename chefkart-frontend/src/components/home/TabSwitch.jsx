@@ -16,7 +16,7 @@ const FALLBACK_DATA = [
     category: "For Families",
     title: "Wholesome Feasts for the Family",
     content: "Spend quality time with your loved ones while our cooks take care of the kitchen. Nutritious, multi-course meals that everyone will love.",
-    image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&w=800&q=80",
+    image: "https://media.istockphoto.com/id/1167975360/photo/latin-multi-generation-family-having-feast-on-sunday-lunch.webp?a=1&b=1&s=612x612&w=0&k=20&c=CN4-nXojYW1TUgXH8xFITenYt_iIb8HPYg_pb8RNJMk=",
     features: ["Kid-Friendly Menus", "Diverse Cuisines", "Time-Saving"]
   }
 ];

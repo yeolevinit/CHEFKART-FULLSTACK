@@ -25,7 +25,7 @@ const Carousel2 = () => {
 
             <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform hover:rotate-1 transition-transform duration-500">
               <img
-                src="https://images.unsplash.com/photo-1556910103-1c02745a30bf?auto=format&fit=crop&w=1600&q=80"
+                src="https://plus.unsplash.com/premium_photo-1661694157596-0ce69fac171c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8aG9tZSUyMGNoZWZ8ZW58MHx8MHx8fDA%3D"
                 alt="Chef Cooking at Home"
                 className="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-700"
               />
