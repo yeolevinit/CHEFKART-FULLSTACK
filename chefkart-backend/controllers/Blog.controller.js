@@ -66,18 +66,67 @@ export const createBlog = async (req, res, next) => {
  * @route   GET /api/v1/blog/getall
  * @access  Public
  */
+// export const getAllBlogs = async (req, res, next) => {
+//   try {
+//     // Optional: Add pagination later (page, limit)
+//     // const blogs = await Blog.find().sort({ createdAt: -1 }); // Newest first
+
+//     // res.status(200).json({
+//     //   status: 'success',
+//     //   results: blogs.length,
+//     //   data: blogs,
+//     // });
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     // 2. Fetch from DB
+//     // Use .lean() for faster GET requests (it returns plain JS objects)
+//     const blogs = await Blog.find()
+//       .sort({ createdAt: -1 })
+//       .skip(skip)
+//       .limit(limit)
+//       .lean();
+
+//     // 3. Get total count for frontend pagination logic
+//     const totalBlogs = await Blog.countDocuments();
+
+//     // 4. Robust Response
+//     res.status(200).json({
+//       status: 'success',
+//       results: blogs.length,
+//       total: totalBlogs,
+//       pagination: {
+//         current_page: page,
+//         total_pages: Math.ceil(totalBlogs / limit)
+//       },
+//       data: blogs,
+//     });
+//   } catch (error) {
+//     console.error("🔥 Error in getAllBlogs:", error.message);
+//     next(error);
+//   }
+// };
+// backend/controllers/Blog.controller.js
+
+// backend/controllers/Blog.controller.js
 export const getAllBlogs = async (req, res, next) => {
   try {
-    // Optional: Add pagination later (page, limit)
-    const blogs = await Blog.find().sort({ createdAt: -1 }); // Newest first
+    console.log("Attempting to fetch blogs...");
+    const blogs = await Blog.find();
+    console.log("Blogs found:", blogs.length);
 
     res.status(200).json({
       status: 'success',
-      results: blogs.length,
       data: blogs,
     });
   } catch (error) {
-    next(error);
+    // This will print the EXACT reason for the 500 error in your terminal
+    console.error("CRITICAL BACKEND ERROR:", error);
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
   }
 };
 
@@ -98,12 +147,14 @@ export const getBlogById = async (req, res, next) => {
         message: 'Blog post not found.'
       });
     }
+    console.log(blog);
 
     res.status(200).json({
       status: 'success',
       data: blog,
     });
   } catch (error) {
+    console.error("🔥 Error in getBlogById:", error.message);
     next(error);
   }
 };

@@ -54,13 +54,13 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-const corsOptions = {
-  origin: [process.env.CLIENT_URL || 'http://localhost:5173'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+app.use(cors({
+  origin: 'http://localhost:5173',
   credentials: true,
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -80,6 +80,9 @@ app.get('/', (req, res) => {
 });
 
 const apiV1 = express.Router();
+// backend/app.js
+
+
 
 apiV1.use('/users', userRoutes);         // Standardized from /auth
 apiV1.use('/blogs', blogRoutes);

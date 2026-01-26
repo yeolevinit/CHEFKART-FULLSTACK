@@ -64,7 +64,7 @@ const Hero = () => {
 
                         <video
                             className="object-cover object-center w-full h-full"
-                            src="https://chefkart-strapi-media.s3.ap-south-1.amazonaws.com/website_cook_loop_4e9912d5f5.mp4"
+                            src="https://storage.googleapis.com/chefkart-strapi-media/website_cook_loop_4e9912d5f5.mp4"
                             autoPlay
                             loop
                             muted

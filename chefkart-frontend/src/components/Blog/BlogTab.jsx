@@ -17,17 +17,23 @@ const BlogTab = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await api.get("/blogs/all");
+                const response = await api.get("/blogs/all"); // Ensure the endpoint is /blogs/all
+
+                console.log("Full API Response:", response.data); // Debug log
+
                 if (response.data && response.data.data) {
                     setBlogs(response.data.data);
-                } else {
+                } else if (Array.isArray(response.data)) {
                     setBlogs(response.data);
+                } else {
+                    setBlogs([]);
                 }
             } catch (err) {
-                setError("Failed to load stories. Please try again later.");
-                console.error(err);
+                // Log the actual error object to see status codes
+                console.error("Axios Error Details:", err.response || err);
+                setError(`Error: ${err.response?.data?.message || "Server connection failed"}`);
             } finally {
-                setLoading(false);
+                setLoading(true);
             }
         };
         fetchBlogs();
