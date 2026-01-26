@@ -12,23 +12,23 @@ import xss from 'xss-clean';
 dotenv.config();
 import connectDB from './config/db.js';
 
-// Route Imports (Standardized to match our refactor)
-import userRoutes from './routes/User.routes.js';
-import blogRoutes from './routes/Blog.routes.js';
-import testimonialRoutes from './routes/Testimonial.routes.js';
-import galleryRoutes from './routes/Gallery.routes.js';
-import carouselRoutes from './routes/Carousel.routes.js';
+// Route Imports (Standardized to match actual filenames)
+import userRoutes from './routes/User.route.js';
+import blogRoutes from './routes/Blog.route.js';
+import testimonialRoutes from './routes/Testimonial.route.js';
+import galleryRoutes from './routes/Gallery.route.js';
+import carouselRoutes from './routes/Crousel.route.js';
 import bookingRoutes from './routes/Booking.routes.js';
-import chefRoutes from './routes/Chef.routes.js';
-import connectRoutes from './routes/Connect.routes.js';
-import serviceRoutes from './routes/Service.routes.js';
-import homeRoutes from './routes/HomePage.routes.js';
-import investorContactRoutes from './routes/InvestorContact.routes.js';
-import investorRoutes from './routes/Investor.routes.js';
-import foodRoutes from './routes/Food.routes.js';
-import joinRoutes from './routes/Join.routes.js';
-import foodGalleryRoutes from './routes/FoodGallery.routes.js';
-import contactRoutes from './routes/Contact.routes.js';
+import chefRoutes from './routes/Chef.route.js';
+import connectRoutes from './routes/Connect.route.js';
+import serviceRoutes from './routes/Service.route.js';
+import homeRoutes from './routes/HomePage.route.js';
+import investorContactRoutes from './routes/InvestorContact.route.js';
+import investorRoutes from './routes/Investor.route.js';
+import foodRoutes from './routes/Food.route.js';
+import joinRoutes from './routes/Join.route.js';
+import foodGalleryRoutes from './routes/FoodGall.route.js';
+import contactRoutes from './routes/Contact.route.js';
 
 // Initialize App
 const app = express();

@@ -2,7 +2,7 @@
 # Node.js (global)
 # ======================
 chefkart-backend/node_modules/
-chefkart-frontend/node_modules/
+chefkart-frontend/node_modules_old/
 
 # ======================
 # Environment variables
