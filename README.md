@@ -2,6 +2,8 @@
 
 ChefKart is a production-grade **MERN** application designed to bridge the gap between professional chefs and households. The platform features a robust **MVC architecture**, secure **JWT authentication**, and cloud-integrated media management via **Cloudinary**.
 
+Live Demo LInk--https://chefkart-fullstack-02.onrender.com/
+
 ## 🚀 Key Features
 
 * **Chef Discovery:** Advanced filtering by city, cuisine, and dietary preferences (Veg/Non-Veg).
